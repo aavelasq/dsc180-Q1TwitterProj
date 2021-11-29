@@ -37,20 +37,6 @@ def connect_to_endpoint(url, params):
         raise Exception(response.status_code, response.text)
     return response.json()
 
-def clean_string(text):
-    t = text.lower() # lowercase string
-    empty_str=""
-    new_t=re.sub(r"[^\w\s]",empty_str,t)
-    t = ''.join(new_t) # convert back to string
-
-    return t 
-
-def json_into_df(json_obj):
-    df = pd.DataFrame(json_obj['data'])
-    df['text'] = df['text'].apply(clean_string)
-    
-    return df['text']
-
 def main():
     df = pd.DataFrame()
 
@@ -73,7 +59,6 @@ def main():
 
         json_response = connect_to_endpoint(search_url, query_params)
         df1 = pd.DataFrame(json_response['data'])
-        df1['text'] = df['text'].apply(clean_string)
         df = pd.concat([df, df1])
         json_poutput = json.dumps(json_response, indent=4, sort_keys=True)
 
