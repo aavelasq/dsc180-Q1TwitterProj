@@ -1,4 +1,5 @@
 # imports
+from numpy.core.numeric import False_
 import twitterkeys
 import pandas as pd
 import requests
@@ -7,6 +8,7 @@ import json
 import re
 import datetime
 from datetime import timedelta
+import time
 
 bearer_token = twitterkeys.apikeys['bearer_token']
 
@@ -55,29 +57,41 @@ def main():
     date = datetime.datetime(2016, 6, 19)
     final_date = date + datetime.timedelta(days=61)
 
+    temp_date = date + timedelta(days=2)
+
+    tweet_count = 0
     while date != final_date:
         start_time = datetime.datetime.strftime(date, r"%Y-%m-%dT%H:%M:%SZ")
         end_date = date + datetime.timedelta(days=1)
         end_time = datetime.datetime.strftime(end_date, r"%Y-%m-%dT%H:%M:%SZ")
 
-        query_params = {'query': '"milo yiannopoulos" (#freemilo OR #miloyiannopoulos OR #freenero OR #milo OR #jesuismilo OR #yiannopoulos OR #milosd OR #nero OR #talktomilo OR #freemilonow) -is:retweet', 
-                        'max_results': '10', 
+        query_params = {'query': '"milo yiannopoulos" (#freemilo OR #miloyiannopoulos OR #freenero OR #milo OR #jesuismilo OR #yiannopoulos) -is:retweet', 
+                        'max_results': '100', 
                         'start_time': start_time, 
                         'end_time': end_time, 
                         'tweet.fields': 'created_at,author_id'}
 
         json_response = connect_to_endpoint(search_url, query_params)
-        df.append(json_into_df(json_response))
+        df1 = pd.DataFrame(json_response['data'])
+        df = pd.concat([df, df1])
         json_poutput = json.dumps(json_response, indent=4, sort_keys=True)
-        print(json_poutput)
+
+        tweet_count += len(df1)
+
+        print('Tweet Gathered:', str(len(df)))
+        df.to_csv('/Users/nikithagopal/Documents/dsc30-pa1/dsc180-Q1TwitterProj/data/raw/rawData_milo.csv', index = False)
+
+        if tweet_count > 290:
+            print("SLEEPING----------")
+            tweet_count = 0
+            time.sleep(900)
+
 
         date += timedelta(days=1)
+    
 
 
     print(len(df))
-    
-    with open('', 'w') as f:
-        json.dump(df, f)
 
 if __name__ == "__main__":
     main()
