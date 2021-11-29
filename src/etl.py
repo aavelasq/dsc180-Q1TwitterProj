@@ -12,4 +12,6 @@ def import_data(test_dir, file_dir):
         json_file = json.load(f)
 
     df = pd.DataFrame(json_file['data'])
+
+    # df = pd.read_csv(file_dir)
     return df
