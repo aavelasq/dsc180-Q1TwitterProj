@@ -82,6 +82,8 @@ def main():
         print('Tweet Gathered:', str(len(df)))
         df.to_csv('/Users/nikithagopal/Documents/dsc30-pa1/dsc180-Q1TwitterProj/data/raw/rawData_milo.csv', index = False)
 
+        time.sleep(3)
+
         if tweet_count > 290:
             print("SLEEPING----------")
             tweet_count = 0
