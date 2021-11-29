@@ -16,9 +16,9 @@ search_url = "https://api.twitter.com/2/tweets/search/all"
 
 # Optional params: start_time,end_time,since_id,until_id,max_results,next_token,
 # expansions,tweet.fields,media.fields,poll.fields,place.fields,user.fields
-query_params = {'query': '#freemilo', 'max_results': '10', 
-                'start_time': '2016-01-19T00:00:00Z', 'end_time': '2017-01-19T00:00:00Z', 
-                'tweet.fields': 'created_at,author_id'}
+# query_params = {'query': '#freemilo', 'max_results': '10', 
+#                 'start_time': '2016-01-19T00:00:00Z', 'end_time': '2017-01-19T00:00:00Z', 
+#                 'tweet.fields': 'created_at,author_id'}
 
 
 def bearer_oauth(r):
@@ -73,6 +73,7 @@ def main():
 
         json_response = connect_to_endpoint(search_url, query_params)
         df1 = pd.DataFrame(json_response['data'])
+        df1['text'] = df['text'].apply(clean_string)
         df = pd.concat([df, df1])
         json_poutput = json.dumps(json_response, indent=4, sort_keys=True)
 
