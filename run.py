@@ -16,7 +16,10 @@ def main(targets):
         data = etl.import_data(**data_cfg)
 
     if 'eda' in targets:
+        # rq 1 function 
         calculate_stats(data)
+
+        # rq 2 function
 
     if 'test' in targets:
         with open('config/data-params.json') as fh:
