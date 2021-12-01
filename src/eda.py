@@ -3,10 +3,13 @@ import datetime
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-test_date = datetime.datetime(2021, 11, 12)
+# test_date = datetime.datetime(2021, 11, 12)
 milo_deplatform_date = datetime.datetime(2016, 7, 19)
 
 def convert_dates(data):
+    '''
+    converts dates to datetime object
+    '''
     # convert to datetime object
     data['created_at'] = pd.to_datetime(data['created_at'])
     # don't localize time
@@ -18,8 +21,11 @@ def convert_dates(data):
 
     return data
 
-def count_days(date):
-    return date - milo_deplatform_date
+def count_days(date, deplatform_date):
+    '''
+    helper function to count number of days since deplatform date
+    '''
+    return date - deplatform_date
 
 def user_activity_levels(data):
     '''
@@ -33,7 +39,8 @@ def user_activity_levels(data):
     df = num_tweets.reset_index().rename(
         columns={"created_at": "Date", "text": "# Tweets"})
 
-    df['Date'] = df['Date'].apply(count_days).dt.days
+    df['Date'] = df['Date'].apply(
+        lambda x: count_days(x, milo_deplatform_date)).dt.days
 
     # convert df to csv
     df.to_csv(".//data/out/userActivityLevels.csv")
@@ -58,7 +65,8 @@ def num_unique_users(data):
     df = pd.DataFrame(data={
         "Date": date_ix, "# Unique Users": numUniqueUsers_ix})
 
-    df['Date'] = df['Date'].apply(count_days).dt.days
+    df['Date'] = df['Date'].apply(
+        lambda x: count_days(x, milo_deplatform_date)).dt.days
 
     # convert df to csv
     df.to_csv(".//data/out/uniqueUsers.csv")
@@ -96,12 +104,15 @@ def new_users_count(data):
     newUsers_df = pd.DataFrame(data={
         'Date': date_ix, '# New Users': numNewUsers_ix})
 
-    newUsers_df['Date'] = newUsers_df['Date'].apply(count_days).dt.days
+    newUsers_df['Date'] = newUsers_df['Date'].apply(
+        lambda x: count_days(x, milo_deplatform_date)).dt.days
 
     # convert df to csv
     newUsers_df.to_csv(".//data/out/newUsers.csv")
 
     return newUsers_df
+
+# functions used to create line charts
 
 def create_newUsers_graph(df):
     '''
@@ -130,9 +141,11 @@ def create_userActivity_graph(df):
     plt.title("Volume of Tweets")
     plt.savefig('.//data/out/userActivityPlot.png', bbox_inches='tight')
 
+# main function 
+
 def calculate_stats(data):
     df = convert_dates(data)
-    
+
     # create csvs out of data
     userActivity_df = user_activity_levels(df)
     uniqueUsers_df = num_unique_users(df)
