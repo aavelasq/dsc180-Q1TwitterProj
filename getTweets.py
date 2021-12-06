@@ -70,11 +70,12 @@ def main():
 
         time.sleep(3)
 
+        time.sleep(3)
+
         if tweet_count > 290:
             print("SLEEPING----------")
             tweet_count = 0
             time.sleep(900)
-
 
         date += timedelta(days=1)
     
