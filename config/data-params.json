@@ -1,4 +1,4 @@
 {
     "test_dir": "data/testdata.json",
-    "file_dir": "data/rawData_milo.csv"
+    "file_dir": "data/miloTweets.csv"
 }

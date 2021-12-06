@@ -1,9 +1,10 @@
+from numpy.core.fromnumeric import mean
 import pandas as pd
 import datetime
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# test_date = datetime.datetime(2021, 11, 12)
+test_date = datetime.datetime(2021, 11, 12)
 milo_deplatform_date = datetime.datetime(2016, 7, 19)
 
 def convert_dates(data):
@@ -27,7 +28,7 @@ def count_days(date, deplatform_date):
     '''
     return date - deplatform_date
 
-def user_activity_levels(data):
+def user_activity_levels(data, deplatform_date):
     '''
     measures posting activity levels by counting the number of tweets
     that occur per each time window (1 day)
@@ -40,14 +41,14 @@ def user_activity_levels(data):
         columns={"created_at": "Date", "text": "# Tweets"})
 
     df['Date'] = df['Date'].apply(
-        lambda x: count_days(x, milo_deplatform_date)).dt.days
+        lambda x: count_days(x, deplatform_date)).dt.days
 
     # convert df to csv
     df.to_csv(".//data/out/userActivityLevels.csv")
 
     return df
 
-def num_unique_users(data):
+def num_unique_users(data, deplatform_date):
     '''
     measures number of unique users who posted during 
     each time window (1 day)
@@ -66,14 +67,14 @@ def num_unique_users(data):
         "Date": date_ix, "# Unique Users": numUniqueUsers_ix})
 
     df['Date'] = df['Date'].apply(
-        lambda x: count_days(x, milo_deplatform_date)).dt.days
+        lambda x: count_days(x, deplatform_date)).dt.days
 
     # convert df to csv
     df.to_csv(".//data/out/uniqueUsers.csv")
 
     return df
 
-def new_users_count(data):
+def new_users_count(data, deplatform_date):
     '''
     counts the number of new users per time window (1 day)
     after an initial 7 day period of not counting new users (seenUsers)
@@ -105,7 +106,7 @@ def new_users_count(data):
         'Date': date_ix, '# New Users': numNewUsers_ix})
 
     newUsers_df['Date'] = newUsers_df['Date'].apply(
-        lambda x: count_days(x, milo_deplatform_date)).dt.days
+        lambda x: count_days(x, deplatform_date)).dt.days
 
     # convert df to csv
     newUsers_df.to_csv(".//data/out/newUsers.csv")
@@ -141,15 +142,53 @@ def create_userActivity_graph(df):
     plt.title("Volume of Tweets")
     plt.savefig('.//data/out/userActivityPlot.png', bbox_inches='tight')
 
+def numOfTweets(df, deplatform_date):
+    '''
+    calculates number of tweets before and after deplatforming
+    '''
+    if deplatform_date == 0:
+        before_deplat_df = df[df['Date'] > deplatform_date]
+        after_deplat_df = df[df['Date'] < deplatform_date]
+    else: 
+        before_deplat_df = df[df['created_at'] > deplatform_date]
+        after_deplat_df = df[df['created_at'] < deplatform_date]
+
+    num_df = pd.DataFrame(data={"Before": [len(before_deplat_df)], "After": [len(after_deplat_df)]})
+
+    return num_df
+
+def aggregate_twitter_vals():
+    '''
+    gets total for both before and after deplatform date
+    '''
+    newUsers_df = pd.read_csv(".//data/out/newUsers.csv")
+    uniqueUsers_df = pd.read_csv(".//data/out/uniqueUsers.csv")
+    userActivity_df = pd.read_csv(".//data/out/userActivityLevels.csv")
+
+    numOfTweets(newUsers_df, 0).to_csv(".//data/out/newUsers_totals.csv")
+    numOfTweets(uniqueUsers_df, 0).to_csv(".//data/out/uniqueUsers_totals.csv")
+    numOfTweets(userActivity_df, 0).to_csv(".//data/out/userActivity_totals.csv")
+
 # main function 
 
-def calculate_stats(data):
+def calculate_stats(data, test=False):
     df = convert_dates(data)
 
-    # create csvs out of data
-    userActivity_df = user_activity_levels(df)
-    uniqueUsers_df = num_unique_users(df)
-    newUsers_df = new_users_count(df)
+    if test == False:
+        # create csvs out of data
+        userActivity_df = user_activity_levels(df, milo_deplatform_date)
+        uniqueUsers_df = num_unique_users(df, milo_deplatform_date)
+        newUsers_df = new_users_count(df,milo_deplatform_date)
+        # counts number of tweets before and after deplatforming 
+        totalTweets = numOfTweets(df, milo_deplatform_date)
+    else:
+        userActivity_df = user_activity_levels(df, test_date)
+        uniqueUsers_df = num_unique_users(df, test_date)
+        newUsers_df = new_users_count(df,test_date)
+        totalTweets = numOfTweets(df, test_date)
+
+    totalTweets.to_csv(".//data/out/numOfTweetsBefAft.csv")
+    aggregate_twitter_vals()
 
     # create graphs + save as pngs
     create_newUsers_graph(newUsers_df)

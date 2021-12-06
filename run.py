@@ -27,7 +27,7 @@ def main(targets):
 
         data = etl.import_test_data(**data_cfg)
 
-        calculate_stats(data)
+        calculate_stats(data, test=True)
 
 if __name__ == '__main__':
     targets = sys.argv[1:]
