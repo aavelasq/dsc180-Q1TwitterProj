@@ -1,10 +1,9 @@
-from numpy.core.fromnumeric import mean
 import pandas as pd
 import datetime
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-test_date = datetime.datetime(2021, 11, 12)
+test_date = datetime.datetime(2016, 6, 12)
 milo_deplatform_date = datetime.datetime(2016, 7, 19)
 
 def convert_dates(data):
