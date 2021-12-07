@@ -1,11 +1,13 @@
-from numpy.core.fromnumeric import mean
 import pandas as pd
 import datetime
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
 
-test_date = datetime.datetime(2021, 11, 12)
+test_date = datetime.datetime(2016, 6, 12)
 milo_deplatform_date = datetime.datetime(2016, 7, 19)
+outdir = ".//data/out"
+tempdir = ".//data/temp"
 
 def convert_dates(data):
     '''
@@ -44,7 +46,8 @@ def user_activity_levels(data, deplatform_date):
         lambda x: count_days(x, deplatform_date)).dt.days
 
     # convert df to csv
-    df.to_csv(".//data/out/userActivityLevels.csv")
+    out_path = os.path.join(tempdir, "userActivityLevels.csv")
+    df.to_csv(out_path)
 
     return df
 
@@ -70,7 +73,8 @@ def num_unique_users(data, deplatform_date):
         lambda x: count_days(x, deplatform_date)).dt.days
 
     # convert df to csv
-    df.to_csv(".//data/out/uniqueUsers.csv")
+    out_path = os.path.join(tempdir, "uniqueUsers.csv")
+    df.to_csv(out_path)
 
     return df
 
@@ -109,7 +113,8 @@ def new_users_count(data, deplatform_date):
         lambda x: count_days(x, deplatform_date)).dt.days
 
     # convert df to csv
-    newUsers_df.to_csv(".//data/out/newUsers.csv")
+    out_path = os.path.join(tempdir, "newUsers.csv")
+    newUsers_df.to_csv(out_path)
 
     return newUsers_df
 
@@ -122,7 +127,9 @@ def create_newUsers_graph(df):
     sns.lineplot(data=df, x='Date', y="# New Users")
     plt.xlabel('# Days Before and After Deplatforming')
     plt.title("Number of New Users")
-    plt.savefig('.//data/out/newUsersPlot.png', bbox_inches='tight')
+
+    out_path = os.path.join(outdir, "newUsersPlot.png")
+    plt.savefig(out_path, bbox_inches='tight')
 
 def create_uniqueUsers_graph(df):
     '''
@@ -131,7 +138,9 @@ def create_uniqueUsers_graph(df):
     sns.lineplot(data=df, x="Date", y="# Unique Users")
     plt.xlabel('# Days Before and After Deplatforming')
     plt.title("Number of Unique Users")
-    plt.savefig('.//data/out/uniqueUsersPlot.png', bbox_inches='tight')
+
+    out_path = os.path.join(outdir, "uniqueUsersPlot.png")
+    plt.savefig(out_path, bbox_inches='tight')
 
 def create_userActivity_graph(df):
     '''
@@ -140,7 +149,9 @@ def create_userActivity_graph(df):
     sns.lineplot(data=df, x="Date", y="# Tweets")
     plt.xlabel('# Days Before and After Deplatforming')
     plt.title("Volume of Tweets")
-    plt.savefig('.//data/out/userActivityPlot.png', bbox_inches='tight')
+
+    out_path = os.path.join(outdir, "userActivityPlot.png")
+    plt.savefig(out_path, bbox_inches='tight')
 
 def numOfTweets(df, deplatform_date):
     '''
@@ -161,13 +172,13 @@ def aggregate_twitter_vals():
     '''
     gets total for both before and after deplatform date
     '''
-    newUsers_df = pd.read_csv(".//data/out/newUsers.csv")
-    uniqueUsers_df = pd.read_csv(".//data/out/uniqueUsers.csv")
-    userActivity_df = pd.read_csv(".//data/out/userActivityLevels.csv")
+    newUsers_df = pd.read_csv(os.path.join(tempdir, "newUsers.csv"))
+    uniqueUsers_df = pd.read_csv(os.path.join(tempdir, "uniqueUsers.csv"))
+    userActivity_df = pd.read_csv(os.path.join(tempdir, "userActivityLevels.csv"))
 
-    numOfTweets(newUsers_df, 0).to_csv(".//data/out/newUsers_totals.csv")
-    numOfTweets(uniqueUsers_df, 0).to_csv(".//data/out/uniqueUsers_totals.csv")
-    numOfTweets(userActivity_df, 0).to_csv(".//data/out/userActivity_totals.csv")
+    numOfTweets(newUsers_df, 0).to_csv(os.path.join(outdir, "newUsers_totals.csv"))
+    numOfTweets(uniqueUsers_df, 0).to_csv(os.path.join(outdir, "uniqueUsers_totals.csv"))
+    numOfTweets(userActivity_df, 0).to_csv(os.path.join(outdir, "userActivity_totals.csv"))
 
 # main function 
 
@@ -187,7 +198,8 @@ def calculate_stats(data, test=False):
         newUsers_df = new_users_count(df,test_date)
         totalTweets = numOfTweets(df, test_date)
 
-    totalTweets.to_csv(".//data/out/numOfTweetsBefAft.csv")
+    out_path = os.path.join(outdir, "numOfTweetsBefAft.csv")
+    totalTweets.to_csv(out_path)
     aggregate_twitter_vals()
 
     # create graphs + save as pngs

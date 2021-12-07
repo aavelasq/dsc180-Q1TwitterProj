@@ -8,7 +8,7 @@ import os
 import warnings
 warnings.filterwarnings("ignore")
 
-test_date = datetime.datetime(2021, 11, 12)
+test_date = datetime.datetime(2016, 6, 12)
 milo_deplatform_date = datetime.datetime(2016, 7, 19)
 milo_top_words = ["#sjw", "#triggered", "#feminismiscancer",'#hitler', "#politicalcorrectnessgonemad", "#trump2016", "savior",'#regressiveleft']
 test_top_words = ["bebjfhadkfkdkdkkdkd", "alkflsdkfksdjf", "ajflksjdlkfdjsfkjsdklfjs"]
