@@ -133,7 +133,7 @@ def plot_unique_users(users_time_df, deplat_date, outdir):
     user_days_gb = user_days_gb.groupby("Days Before & After Deplatforming").sum()
 
     plt.figure(figsize = (16,9))
-    p = sns.lineplot(data=user_days_gb).set(title="Number of Users using Keyword", ylabel = "# of Users")
+    p = sns.lineplot(data=user_days_gb, dashes=False).set(title="Number of Users using Keyword", ylabel = "# of Users")
     plt.axvline(0, 0.04, 0.99,color="red")
     plt.savefig(os.path.join(outdir, "unique_users.jpg"),dpi=300, bbox_inches = "tight")
     plt.close()
@@ -149,7 +149,7 @@ def plot_tweets_vol(ideas_time_df, deplat_date, outdir):
     tweets_days_gb_sum = ideas_time_df.groupby("Days Before & After Deplatforming").sum()
     
     plt.figure(figsize = (16,9))
-    p = sns.lineplot(data=tweets_days_gb_sum).set(title="Volume of Tweets having Keyword", ylabel = "# of Tweets")
+    p = sns.lineplot(data=tweets_days_gb_sum, dashes=False).set(title="Volume of Tweets having Keyword", ylabel = "# of Tweets")
     plt.axvline(0, 0.04, 0.99,color="red")
     plt.savefig(os.path.join(outdir, "tweets_volume.jpg"),dpi=300, bbox_inches = "tight")
     plt.close()
@@ -164,7 +164,7 @@ def plot_med_tweets(ideas_time_df, deplat_date, outdir):
     tweets_days_gb_med = ideas_time_df.groupby("Days Before & After Deplatforming").median()
 
     plt.figure(figsize = (16,9))
-    p = sns.lineplot(data=tweets_days_gb_med).set(title="Median Number of Tweets", ylabel = "# of Tweets")
+    p = sns.lineplot(data=tweets_days_gb_med, dashes=False).set(title="Median Number of Tweets", ylabel = "# of Tweets")
     plt.axvline(0, 0.04, 0.99,color="red")
     plt.savefig(os.path.join(outdir, "median_number_tweets.jpg"),dpi=300, bbox_inches = "tight")
     plt.close()
