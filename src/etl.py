@@ -5,9 +5,7 @@ def import_test_data(test_dir, file_dir):
     '''
     used for test target
     '''
-    with open(test_dir) as f:
-        json_file = json.load(f)
-    df = pd.DataFrame(json_file['data'])
+    df = pd.read_csv(test_dir)
     return df
 
 def import_data(test_dir, file_dir):
