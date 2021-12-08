@@ -158,11 +158,11 @@ def numOfTweets(df, deplatform_date):
     calculates number of tweets before and after deplatforming
     '''
     if deplatform_date == 0:
-        before_deplat_df = df[df['Date'] > deplatform_date]
-        after_deplat_df = df[df['Date'] < deplatform_date]
+        before_deplat_df = df[df['Date'] < deplatform_date]
+        after_deplat_df = df[df['Date'] > deplatform_date]
     else: 
-        before_deplat_df = df[df['created_at'] > deplatform_date]
-        after_deplat_df = df[df['created_at'] < deplatform_date]
+        before_deplat_df = df[df['created_at'] < deplatform_date]
+        after_deplat_df = df[df['created_at'] > deplatform_date]
 
     num_df = pd.DataFrame(data={"Before": [len(before_deplat_df)], "After": [len(after_deplat_df)]})
 
