@@ -131,3 +131,6 @@ dmypy.json
 # apikeys file
 apikeys.py
 twitterkeys.py
+
+# full data
+/data/miloTweets.csv 
