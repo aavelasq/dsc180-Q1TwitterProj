@@ -1,11 +1,8 @@
 # imports
-from numpy.core.numeric import False_
-import twitterkeys
+import twitterkeys # apikeys file
 import pandas as pd
 import requests
-import os
 import json
-import re
 import datetime
 from datetime import timedelta
 import time
@@ -38,6 +35,9 @@ def connect_to_endpoint(url, params):
     return response.json()
 
 def main():
+    '''
+    main scraper function to get Tweets off of Twitter API
+    '''
     df = pd.DataFrame()
 
     date = datetime.datetime(2016, 6, 19)
@@ -66,7 +66,7 @@ def main():
             
             tweet_count += len(df1)
             print('Tweet Gathered:', str(len(df)))
-            df.to_csv('/Users/nikithagopal/Documents/dsc30-pa1/dsc180-Q1TwitterProj/data/raw/rawData_milo.csv', index = False)
+            df.to_csv('.//data/raw/rawData_milo.csv', index = False)
 
         time.sleep(3)
 
@@ -79,8 +79,6 @@ def main():
 
         date += timedelta(days=1)
     
-
-
     print(len(df))
 
 if __name__ == "__main__":
