@@ -1,0 +1,4 @@
+{
+    "dockerhub-id": "aavelasq/twitter-project",
+    "build-script": "python run.py test"
+}
